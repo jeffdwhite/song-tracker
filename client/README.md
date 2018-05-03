@@ -1,6 +1,9 @@
 # client
 
 > A Vue.js project
+The default ipaddress is 192.168.1.50
+The default port is 8080
+(see /config/index.js, /test/e2e/nightwatch.conf.js, /test/e2e/specs/test.js)
 
 ## Build Setup
 

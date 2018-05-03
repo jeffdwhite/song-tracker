@@ -1,21 +1,16 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const morgan = require('morgan')
-const {sequelize} = require('./models')
-const config = require('./config/config')
+const express = require('express');
+const cors = require('cors');
 
-const app = express()
-app.use(morgan('combined'))
-app.use(bodyParser.json())
-app.use(cors())
+//get config information
+const config = require('./config/config');
 
-require('./passport')
+//set up express server for node
+const app = express();
+app.use(express.urlencoded( {extended: true} ));
+app.use(express.json());
+app.use(cors());
+require('./routes')(app);
 
-require('./routes')(app)
-
-sequelize.sync({force: false})
-  .then(() => {
-    app.listen(config.port)
-    console.log(`Server started on port ${config.port}`)
-  })
+// start express server
+app.listen(config.port);
+console.log(`Server started on port ${config.port}`);

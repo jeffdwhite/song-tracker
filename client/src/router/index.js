@@ -1,49 +1,55 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Register from '@/components/Register'
-import Login from '@/components/Login'
-import Songs from '@/components/Songs/Index'
+import HelloWorld from '@/components/HelloWorld'
+import Songs from '@/components/Songs'
 import CreateSong from '@/components/CreateSong'
+import ViewSong from '@/components/ViewSong'
 import EditSong from '@/components/EditSong'
-import ViewSong from '@/components/ViewSong/Index'
+import SignIn from '@/components/SignIn'
+import CreateUser from '@/components/CreateUser'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/register',
-      name: 'register',
-      component: Register
+      path: '/',
+      name: 'home',
+      component: HelloWorld
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/songs',
+      path: '/Songs',
       name: 'songs',
       component: Songs
     },
     {
-      path: '/songs/create',
+      path: '/Songs/Create',
       name: 'songs-create',
       component: CreateSong
     },
     {
-      path: '/songs/:songId',
+      path: '/Songs/:uriAddress',
       name: 'song',
       component: ViewSong
     },
     {
-      path: '/songs/:songId/edit',
+      path: '/Songs/:uriAddress/Edit',
       name: 'song-edit',
       component: EditSong
     },
     {
+      path: '/SignIn',
+      name: 'sign-in',
+      component: SignIn
+    },
+    {
+      path: '/CreateUser',
+      name: 'create-user',
+      component: CreateUser
+    },
+    {
       path: '*',
-      redirect: 'songs'
+      redirect: '/'
     }
   ]
 })

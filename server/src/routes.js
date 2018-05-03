@@ -1,41 +1,36 @@
-const AuthenticationController = require('./controllers/AuthenticationController')
-const AuthenticationControllerPolicy = require('./policies/AuthenticationControllerPolicy')
-const SongsController = require('./controllers/SongsController')
-const BookmarksController = require('./controllers/BookmarksController')
-const HistoriesController = require('./controllers/HistoriesController')
-
-const isAuthenticated = require('./policies/isAuthenticated')
+const authEndpoint = require('./endpoints/authEndpoint');
+const authValidation = require('./validations/authValidation');
+const songsEndpoint = require('./endpoints/songsEndpoint');
+const songsValidation = require('./validations/songsValidation');
+const searchEndpoint = require('./endpoints/searchEndpoint');
+const bookmarksEndpoint = require('./endpoints/bookmarksEndpoint');
+const songsHistoryEndpoint = require('./endpoints/songsHistoryEndpoint');
 
 module.exports = (app) => {
-  app.post('/register',
-    AuthenticationControllerPolicy.register,
-    AuthenticationController.register)
-  app.post('/login',
-    AuthenticationController.login)
+  //user routes
+  app.post('/signin', authEndpoint.signIn),
+  app.post('/createuser', authValidation.createUser, authEndpoint.createUser),
 
-  app.get('/songs',
-    SongsController.index)
-  app.get('/songs/:songId',
-    SongsController.show)
-  app.put('/songs/:songId',
-    SongsController.put)
-  app.post('/songs',
-    SongsController.post)
+  //song routes
+  app.get('/songs', songsEndpoint.index),
+  app.post('/songs', songsValidation.createSong, songsEndpoint.post),
+  app.put('/songs', songsEndpoint.put),
 
-  app.get('/bookmarks',
-    isAuthenticated,
-    BookmarksController.index)
-  app.post('/bookmarks',
-    isAuthenticated,
-    BookmarksController.post)
-  app.delete('/bookmarks/:bookmarkId',
-    isAuthenticated,  
-    BookmarksController.remove)
+  //search get routes
+  app.get('/suggest', searchEndpoint.suggest),
+  app.get('/search', searchEndpoint.search),
 
-  app.get('/histories',
-    isAuthenticated,
-    HistoriesController.index)
-  app.post('/histories',
-    isAuthenticated,
-    HistoriesController.post)
+  //bookmark get route
+  app.get('/bookmarks', bookmarksEndpoint.index),
+
+  //songs history put route
+  app.put('/songsHistory', songsHistoryEndpoint.put),
+  app.delete('/songsHistory', songsHistoryEndpoint.delete),
+
+  //test route
+  app.get('/status', (req, res) => {
+    res.send({
+      message: "Hello World!"
+    })
+  })
 }

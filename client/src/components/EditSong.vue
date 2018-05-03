@@ -1,139 +1,74 @@
 <template>
-  <v-layout>
-    <v-flex xs4>
-      <panel title="Song Metadata">
-        <v-text-field
-          label="Title"
-          required
-          :rules="[required]"
-          v-model="song.title"
-        ></v-text-field>
-
-        <v-text-field
-          label="Artist"
-          required
-          :rules="[required]"
-          v-model="song.artist"
-        ></v-text-field>
-
-        <v-text-field
-          label="Genre"
-          required
-          :rules="[required]"
-          v-model="song.genre"
-        ></v-text-field>
-
-        <v-text-field
-          label="Album"
-          required
-          :rules="[required]"
-          v-model="song.album"
-        ></v-text-field>
-
-        <v-text-field
-          label="Album Image Url"
-          required
-          :rules="[required]"
-          v-model="song.albumImageUrl"
-        ></v-text-field>
-
-        <v-text-field
-          label="YouTube ID"
-          required
-          :rules="[required]"
-          v-model="song.youtubeId"
-        ></v-text-field>
-      </panel>
-    </v-flex>
-
-    <v-flex xs8>
-      <panel title="Song Structure" class="ml-2">
-        <v-text-field
-          label="Tab"
-          multi-line
-          required
-          :rules="[required]"
-          v-model="song.tab"
-        ></v-text-field>
-
-        <v-text-field
-          label="Lyrics"
-          multi-line
-          required
-          :rules="[required]"
-          v-model="song.lyrics"
-        ></v-text-field>
-      </panel>
-
-      <div class="danger-alert" v-if="error">
-        {{error}}
-      </div>
-
-      <v-btn
-        dark
-        class="cyan"
-        @click="save">
-        Save Song
-      </v-btn>
-    </v-flex>
-  </v-layout>
+  <v-container fluid>
+    <v-layout row>
+      <v-flex md8 offset-md2>
+        <v-form ref="form">
+          <panel title="Edit Song">
+            <v-text-field label="Title" required :rules="[required]" v-model="song.title"/>
+            <v-text-field label="Artist" required :rules="[required]" v-model="song.artist"/>
+            <v-text-field label="Genre" required :rules="[required]" v-model="song.genre"/>
+            <v-text-field label="Year" required :rules="[required]" v-model="song.year"/>
+            <v-text-field label="Album" required :rules="[required]" v-model="song.album"/>
+            <v-text-field label="Album Image URL" required :rules="[required]" v-model="song.albumImageURL"/>
+            <v-text-field label="YouTube ID" required :rules="[required]" v-model="song.youtubeID"/>
+            <v-text-field label="Lyrics" multi-line :counter="2000" v-model="song.lyrics"/>
+            <v-btn dark class="cyan" v-if="$store.state.isUserLoggedIn" @click="edit">Submit</v-btn>
+            <v-btn dark class="cyan" v-if="$store.state.isUserLoggedIn" @click="cancel">Cancel</v-btn>
+            <v-alert type="error" dismissible v-model="alert">{{ error }}</v-alert>
+          </panel>
+        </v-form>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import SongsService from '@/services/SongsService'
+import songsService from '@/services/songsService'
 
 export default {
   data () {
     return {
-      song: {
-        title: null,
-        artist: null,
-        genre: null,
-        album: null,
-        albumImageUrl: null,
-        youtubeId: null,
-        lyrics: null,
-        tab: null
-      },
+      song: {},
+      required: (value) => !!value || 'Required',
       error: null,
-      required: (value) => !!value || 'Required.'
+      alert: false
     }
+  },
+  mounted () {
+    this.song = Object.assign({}, this.$store.state.selectedSong)
   },
   methods: {
-    async save () {
+    async edit () {
       this.error = null
-      const areAllFieldsFilledIn = Object
-        .keys(this.song)
-        .every(key => !!this.song[key])
-      if (!areAllFieldsFilledIn) {
-        this.error = 'Please fill in all the required fields.'
-        return
+      if (this.$refs.form.validate()) {
+        try {
+          // write song change to MarkLogic at same URI
+          const response = await songsService.put(this.song)
+          // update songs state to include changes, ensure consistency with database
+          this.$store.dispatch('setSongs', (await songsService.index()).data)
+          this.$store.dispatch('setSong', this.song)
+          // route user to edited song
+          const uriAddress = response.data
+          this.$router.push({name: 'song', params: {uriAddress}})
+        } catch (error) {
+          this.alert = true
+          this.error = error.response.data.error
+        }
+      } else {
+        // if user had not entered all of the required fields
+        this.alert = true
+        this.error = 'Please fill in all of the required fields.'
       }
-
-      const songId = this.$store.state.route.params.songId
-      try {
-        await SongsService.put(this.song)
-        this.$router.push({
-          name: 'song',
-          params: {
-            songId: songId
-          }
-        })
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  },
-  async mounted () {
-    try {
-      const songId = this.$store.state.route.params.songId
-      this.song = (await SongsService.show(songId)).data
-    } catch (err) {
-      console.log(err)
+    },
+    cancel () {
+      this.alert = false
+      this.error = null
+      const uriAddress = this.song.uriAddress
+      this.$router.push({name: 'song', params: {uriAddress}})
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 </style>
