@@ -34,10 +34,10 @@ The server and client are configured to run on a server with a local IP address 
 
 # MarkLogic Configuration
 MarkLogic is configured to run on a server with a local IP address of 192.168.1.100.  You can change the IP address in:<br>
-&nbsp;&nbsp;&nbsp;/server/src/config/connection.js.
+&nbsp;&nbsp;&nbsp;/server/src/config/connection.js
 
 The application is defaulted to access an app server on port 8110.  You can change the port in:<br>
-&nbsp;&nbsp;&nbsp;/server/src/config/connection.js.
+&nbsp;&nbsp;&nbsp;/server/src/config/connection.js
 
 For the database, I changed the following default settings:
 * stemmed searches = advanced
