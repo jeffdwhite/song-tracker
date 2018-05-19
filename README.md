@@ -9,8 +9,8 @@ For guidance on how to build the client tier from scratch and learn Vue.js, plea
 
 ## Future Work
 * Add code to automatically create the database with the correct settings and the app server
-* Add facets to the songs component.
-* Add varying page lengths and pagination to the songs component.
+* Add facets to the songs component
+* Add varying page lengths and pagination to the songs component
 
 ## Not Included
 * Security, including https, encryption, password encryption, etc.
@@ -26,14 +26,14 @@ You need to have npm installed.  My version was 5.8.
 
 The server and client are designed to run in Bash in a terminal window (i.e. MacOS or Linux).  I do not think the software will run in Windows as the file references do not translate to DOS.
 
-The server and client are configured to run on a machine with a local IP address of 192.168.1.50.  You can change the machine in<br>
+The server and client are configured to run on a server with a local IP address of 192.168.1.50.  You can change the IP address in:<br>
 &nbsp;&nbsp;&nbsp;/client/src/services/api.js<br>
 &nbsp;&nbsp;&nbsp;/client/config/index.js<br>
 &nbsp;&nbsp;&nbsp;/client/test/e2e/nightwatch.conf.js
 <br><br>
 
 # MarkLogic Configuration
-MarkLogic is configured to run on a machine with a local IP address of 192.168.1.100.  You can change the machine in:<br>
+MarkLogic is configured to run on a server with a local IP address of 192.168.1.100.  You can change the IP address in:<br>
 &nbsp;&nbsp;&nbsp;/server/src/config/connection.js.
 
 The application is defaulted to access an app server on port 8110.  You can change the port in:<br>
@@ -74,7 +74,7 @@ Intial installation of server npm packages:
 cd server
 npm install
 ```
-The main packages are cors *(make server available across machines)*, express *(server framework)*, joi *(data input validation)*, and marklogic.  The application code can be found in /server/src.
+The main packages are cors *(make server available across servers)*, express *(server framework)*, joi *(data input validation)*, and marklogic.  The application code can be found in /server/src.
 
 Load initial data into MarkLogic:
 ```
@@ -117,4 +117,4 @@ npm run dev
 The client runs on Port 8080.  If you want a different port, you must change the value in the following file:<br>
 &nbsp;&nbsp;&nbsp;/client/config/index.js
 
-To view the application, navagate to the ipaddress:8080 of the machine hosting the client application.
+To view the application, navagate to the ipaddress:8080 of the server hosting the client application.
