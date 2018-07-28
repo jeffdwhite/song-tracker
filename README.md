@@ -124,7 +124,7 @@ npm start
 ```
 The server runs on Port 8081.  If you want a different port, you must change the value in the following two files:<br>
 &nbsp;&nbsp;&nbsp;/server/src/config/config.js<br>
-&nbsp;&nbsp;&nbsp;/client/src/services/api.js
+&nbsp;&nbsp;&nbsp;/client/config/config.js
 <br><br>
 
 ## Client (second terminal window or tab)
@@ -133,6 +133,6 @@ cd client
 npm run dev
 ```
 The client runs on Port 8080.  If you want a different port, you must change the value in the following file:<br>
-&nbsp;&nbsp;&nbsp;/client/config/index.js
+&nbsp;&nbsp;&nbsp;/client/config/config.js
 
 To view the application, navagate to the ipaddress:8080 of the server hosting the client application.
