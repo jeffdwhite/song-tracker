@@ -9,7 +9,7 @@ const dbAdmin = connection.marklogicConnect("dbAdmin");
 
 // the database connection information
 const marklogic = require('marklogic');
-const host = "192.168.1.100";
+const host = "10.0.0.3";
 const port = 8110;
 const authType = "digest";
 
